@@ -1,18 +1,22 @@
-import os
 from flask import Flask, render_template, request, jsonify
 
 app = Flask(__name__)
 
-@app.route("/")
-def index():
-    return render_template("index.html")
+locations = []
 
-@app.route("/location", methods=["POST"])
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/location', methods=['POST'])
 def location():
     data = request.get_json()
-    print("Location received:", data)
-    return jsonify({"status": "ok"})
+    locations.append(data)
+    return jsonify({"status": "saved"})
+
+@app.route('/view')
+def view():
+    return jsonify(locations)
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=5000)
